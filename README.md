@@ -21,6 +21,7 @@ https://www.t00ls.net/thread-59411-1-1.html
 ```
 
 2、关注公众号"洞一CyberSecurity"，进行留言，格式：渗透测试Tips-xxxxxxxx。
+![123.png](https://github.com/Power7089/PenetrationTest-Tips/blob/main/img/01cyber.jpg)
 
 3、使用本仓库提交Issues，我会定时摘取整理，然后发布到该仓库。
 
