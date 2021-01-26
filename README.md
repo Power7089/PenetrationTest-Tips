@@ -198,6 +198,17 @@ Function`a${atob`YWxlcnQoMSk=`}```
 cat /proc/1/cgroup
 ```
 
+35、万能密码试试`'=0#`
+
+36、CORS漏洞验证，可以使用curl来验证：
+
+```
+curl https://www.xxxx.com -H "Origin: https://test.com" -I
+检查返回包的 Access-Control-Allow-Origin 字段是否为https://test.com
+```
+
+37、在盲测目标系统是否为Shiro时，可以在Cookie中手动构造`rememebrMe=xxx`，如果返回包中Set-Cookie中存在`rememberMe=deleteMe`，则证明该系统使用了Shiro，因此可以进一步攻击。
+
 ----------------------------------------
 ### 2021年01月21日 - 更新分界线，整理了来自Tools师傅们留言的渗透测试Tips：
 
@@ -229,18 +240,48 @@ cat /proc/1/cgroup
 9、获取短信验证码时，用逗号隔开两个手机号，有可能两个手机号能获取到同一个验证码。Author By：Scorpion
 
 ---------------------------------------
+### 2021年01月26日 - 更新分界线，整理了来自Tools师傅们留言的渗透测试Tips：
+1、测试注入 `and ord(0x1)` ->true，`and ord(0x0)` ->false。Author By：oops33
 
+2、遇到文件读取漏洞，除了读取配置文件，还可以尝试读取网站文件，来进行代码审计，说不定就有开发疏忽的漏洞在源代码里。Author By：iwtbhero
+
+3、使用python快速开启http服务器：Author By：ffffffff0x
+
+```
+基于python2.x，命令如下：
+python -m SimpleHTTPServer 8000
+# 在当前目录起个 8000 端口的 HTTP 服务
+
+基于python3.x，命令如下：
+python -m http.server 8000
+```
+
+4、渗透时尽量不要暴露自己的 IP 地址，挂代理是必须的。Author By：ffffffff0x
+
+- linux 下要查看自己终端是否走代理可以 curl https://ifconfig.me/ 看下返回的 IP 地址
+- windows 就直接访问 https://ifconfig.me/ 即可
+
+5、整理字典时，推荐用linux下的工具快速合并和去重。Author By：ffffffff0x
+
+```
+cat file1.txt file2.txt fileN.txt > out.txt
+sort out.txt | uniq > out2.txt
+```
+
+---------------------------------------
 
 ### 更新日志
 2021年01月20日 - 建立仓库，编写前言，更新渗透测试Tips 1-34 个技巧
 
 2021年01月21日 - 整理来自tools师傅们留言的渗透测试Tips
 
+2021年01月26日 - 整理了几天来自tools师傅们的留言以及个人的渗透测试Tips
+
 # 贡献个人（排名不分先）
 
 **感谢以下师傅们对本仓库，以及安全这个小圈子做的一些小贡献，开源精神永不眠！**
 
-六六，Jokong，phage，登登登Y，zhaoze，oops33，ptgeft，Alex125，Scorpion
+六六，Jokong，phage，登登登Y，zhaoze，oops33，ptgeft，Alex125，Scorpion，iwtbhero，ffffffff0x
 
 # 贡献团队（根据贡献个数进行排名）
 
