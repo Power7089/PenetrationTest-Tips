@@ -253,7 +253,7 @@ inurl:example.com intitle:"index of" ext:sql|xls|xml|json|csv
 inurl:example.com "MYSQL_ROOT_PASSWORD:" ext:env OR ext:yml -git
 ```
 
-42、通过对比favicon的hash对比相关联的网站：
+42、通过favicon的hash来对比相关联的两个网站：
 
 ```
 脚本地址：https://github.com/m4ll0k/Bug-Bounty-Toolz/blob/master/favihash.py
