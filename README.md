@@ -10,11 +10,13 @@
 
 2021年01月26日 - 整理了几天来自tools师傅们的留言以及个人的渗透测试Tips
 
-2021年01月28日 - 整理更新了第38~48，所学习到的渗透测试Tips
+2021年01月28日 - 整理更新了第38~48，所学习记录的渗透测试Tips
 
-2021年01月29日 - 整理更新了第49~59，所学习到的渗透测试Tips，以及来自Tools师傅们部分Tips
+2021年01月29日 - 整理更新了第49~59，所学习记录的渗透测试Tips，以及来自Tools师傅们部分Tips
 
 2021年02月04日 - 整理了一些师傅们留言贡献的渗透测Tips
+
+2021年03月23日 - 整理更新了第60~66，所学习记录的渗透测试Tips
 
 
 ## 食用指南&前言
@@ -491,6 +493,43 @@ http://216.0x3a.00000000326.0xe3
 
 原文链接：https://www.infosecmatter.com/bug-bounty-tips-10-dec-24/#13_ssrf_bypass_list_for_localhost_127001
 ```
+
+
+
+60、对于Apache shiro的CVE-2020-17523的未授权访问，是由于Spring+shiro结合造成的漏洞，可在路径后面添加`%20`，尝试访问该路径内容，造成未授权访问操作。
+
+61、在一些验证码登录，找回密码等地方需要输入手机号，邮箱号的话，尝试配合SQL注入联合查询方式，填写可控手机号，实际情况实际分析。
+
+62、密码爆破不如意，试试"密码喷洒攻击（Password Spray Attack）"法，多来收集用户名。
+
+63、Exchange的下的目录以及功能介绍：
+
+```
+/autoDiscover/	自Exchange Server 2007开始推出的一项自动服务，用于自动配置用户在Outlook中邮箱的相关设置，简化用户登陆使用邮箱的流程。
+/ecp/“Exchange Control Panel”		Exchange管理中心，管理员用于管理组织中的Exchange的Web控制台
+/eWS/“Exchange Web Services”		Exchange Web Service,实现客户端与服务端之间基于HTTP的SOAP交互
+/mapi/		Outlook连接Exchange的默认方式，在2013和2013之后开始使用，2010 sp2同样支持
+/microsoft-Server-ActiveSync/		用于移动应用程序访问电子邮件
+/OAB/“Offline Address Book”		用于为Outlook客户端提供地址簿的副本，减轻Exchange的负担
+/owa/“Outlook Web APP”		Exchange owa 接口，用于通过web应用程序访问邮件、日历、任务和联系人等
+/powerShell/	用于服务器管理的Exchange管理控制台
+/Rpc/	早期的Outlook还使用称为Outlook Anywhere的RPC交互
+```
+
+64、针对于Exchange的账号格式，可以尝试：`domain\username、domian.com\username、username`
+
+65、一个验证域名是否使用了Exchange的脚本：`https://github.com/vysecurity/checkO365`
+
+66、使用云函数的多出口特性，可以将其作为代理池来用。思路大概为：
+
+```
+流程：浏览器请求数据 -> 编写代理 -> 通过代理将数据传给api网关 -> api网关触发云函数并将参数作为event传入进云函数内 (然后反向流程将数据返回到浏览器中)
+所以我们大致编写代码步骤为：
+1、编写云函数，使用api网关做触发器，云函数主要处理api网关传来的数据，再将访问返回的数据包传会给api网关
+2、编写代理代码，主要接收浏览器传来的数据，并将数据整理传给api网关，然后回到第一步。
+注：这是一个思路，具体实现不局限于此，各位大佬各显神通吧~
+```
+
 
 ----------------------------------------
 
